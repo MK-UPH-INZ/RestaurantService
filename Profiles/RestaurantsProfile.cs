@@ -15,6 +15,8 @@ namespace RestaurantService.Profiles
             // source -> target
             CreateMap<Restaurant, RestaurantReadDTO>();
             CreateMap<RestaurantCreateDTO, Restaurant>();
+            CreateMap<RestaurantUpdateDTO, Restaurant>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

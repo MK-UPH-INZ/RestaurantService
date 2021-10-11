@@ -50,6 +50,22 @@ namespace RestaurantService.Controllers
             return Ok(mapper.Map<RestaurantReadDTO>(restaurantItem));
         }
 
+        [HttpPut("{id}", Name = "UpdateRestaurantById")]
+        public ActionResult<RestaurantReadDTO> UpdateRestaurantById(RestaurantUpdateDTO restaurantUpdateDTO, int id)
+        {
+            var restaurantItem = repository.GetRestaurantById(id);
+
+            if (restaurantItem == null)
+            {
+                return NotFound();
+            }
+
+            mapper.Map<RestaurantUpdateDTO, Restaurant>(restaurantUpdateDTO, restaurantItem);
+            repository.SaveChanges();
+
+            return Ok(mapper.Map<RestaurantReadDTO>(restaurantItem));
+        }
+
         [HttpPost]
         public ActionResult<RestaurantReadDTO> CreateRestaurant(RestaurantCreateDTO restaurantCreateDTO)
         {
