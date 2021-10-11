@@ -25,11 +25,30 @@ namespace RestaurantService.Data
                 Console.WriteLine("Seeding Restaurant Data");
 
                 context.Restaurants.AddRange(
-                    new Restaurant() { Name="Restauracja 1" },
-                    new Restaurant() { Name = "Restauracja 2" },
-                    new Restaurant() { Name = "Restauracja 3" },
-                    new Restaurant() { Name = "Restauracja 4" },
-                    new Restaurant() { Name = "Restauracja 5" }
+                    new Restaurant() { 
+                        Name = "Greenanic Smoothies",
+                        Address = "ul. Jałowcowa 1034",
+                        City = "Rybnik",
+                        PostalCode = "44-207",
+                        RegisterDate = DateTime.Parse("2018-02-19")
+                    },
+                    new Restaurant()
+                    {
+                        Name = "Bangalore Spices",
+                        Address = "ul. Akwarelowa 33",
+                        City = "Warszawa",
+                        PostalCode = "04-517",
+                        Voivodeship = "Mazowieckie",
+                        RegisterDate = DateTime.Parse("2012-11-04")
+                    },
+                    new Restaurant()
+                    {
+                        Name = "Veganic Corner",
+                        Address = "ul. Pisarka Mariana 56",
+                        City = "Warszawa",
+                        PostalCode = "03-984",
+                        RegisterDate = DateTime.Parse("2014-06-28")
+                    }
                 );
 
                 context.SaveChanges();
