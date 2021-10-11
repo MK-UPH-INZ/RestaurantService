@@ -23,6 +23,11 @@ namespace RestaurantService.Data
             context.Restaurants.Add(restaurant);
         }
 
+        public void RemoveRestaurant(Restaurant restaurant)
+        {
+            context.Restaurants.Remove(restaurant);
+        }
+
         public IEnumerable<Restaurant> GetAllRestaurants()
         {
             return context.Restaurants.ToList();

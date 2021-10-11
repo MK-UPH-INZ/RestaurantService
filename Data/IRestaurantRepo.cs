@@ -13,5 +13,6 @@ namespace RestaurantService.Data
         IEnumerable<Restaurant> GetAllRestaurants();
         Restaurant GetRestaurantById(int id);
         void CreateRestaurant(Restaurant restaurant);
+        void RemoveRestaurant(Restaurant restaurant);
     }
 }

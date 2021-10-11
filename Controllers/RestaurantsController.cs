@@ -64,5 +64,21 @@ namespace RestaurantService.Controllers
                 new { Id = restaurantReadDTO.Id }, restaurantReadDTO
             );
         }
+
+        [HttpDelete("{id}", Name = "DeleteRestaurantById")]
+        public ActionResult DeleteRestaurant(int id)
+        {
+            var restaurantItem = repository.GetRestaurantById(id);
+
+            if( restaurantItem == null )
+            {
+                return NotFound();
+            }
+
+            repository.RemoveRestaurant(restaurantItem);
+            repository.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
