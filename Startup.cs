@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RestaurantService.Data;
+using RestaurantService.SyncDataServices.Http;
 
 namespace RestaurantService
 {
@@ -30,6 +31,9 @@ namespace RestaurantService
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
+
+            services.AddHttpClient<IUserDataClient, HttpUserDataClient>();
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>

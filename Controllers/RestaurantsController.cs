@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantService.Data;
 using RestaurantService.DTO;
 using RestaurantService.Models;
+using RestaurantService.SyncDataServices.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,17 @@ namespace RestaurantService.Controllers
     {
         private readonly IRestaurantRepo repository;
         private readonly IMapper mapper;
+        private readonly IUserDataClient userDataClient;
 
         public RestaurantsController(
             IRestaurantRepo repository,
-            IMapper mapper
+            IMapper mapper,
+            IUserDataClient userDataClient
         )
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.userDataClient = userDataClient;
         }
 
         [HttpGet]
@@ -67,13 +71,21 @@ namespace RestaurantService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<RestaurantReadDTO> CreateRestaurant(RestaurantCreateDTO restaurantCreateDTO)
+        public async Task<ActionResult<RestaurantReadDTO>> CreateRestaurant(RestaurantCreateDTO restaurantCreateDTO)
         {
             var restaurantModel = mapper.Map<Restaurant>(restaurantCreateDTO);
             repository.CreateRestaurant(restaurantModel);
             repository.SaveChanges();
 
             var restaurantReadDTO = mapper.Map<RestaurantReadDTO>(restaurantModel);
+
+            try
+            {
+                await userDataClient.SendRestaurantToUser(restaurantReadDTO);
+            } catch( Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             return CreatedAtRoute(
                 nameof(GetRestaurantById), 
