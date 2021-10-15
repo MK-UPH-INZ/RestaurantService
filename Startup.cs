@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
 using RestaurantService.SyncDataServices.Http;
 
@@ -33,7 +34,7 @@ namespace RestaurantService
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
 
             services.AddHttpClient<IUserDataClient, HttpUserDataClient>();
-
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>

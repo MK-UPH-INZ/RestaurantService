@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
 using RestaurantService.DTO;
 using RestaurantService.Models;
@@ -18,16 +19,19 @@ namespace RestaurantService.Controllers
         private readonly IRestaurantRepo repository;
         private readonly IMapper mapper;
         private readonly IUserDataClient userDataClient;
+        private readonly IMessageBusClient messageBusClient;
 
         public RestaurantsController(
             IRestaurantRepo repository,
             IMapper mapper,
-            IUserDataClient userDataClient
+            IUserDataClient userDataClient,
+            IMessageBusClient messageBusClient
         )
         {
             this.repository = repository;
             this.mapper = mapper;
             this.userDataClient = userDataClient;
+            this.messageBusClient = messageBusClient;
         }
 
         [HttpGet]
@@ -79,10 +83,22 @@ namespace RestaurantService.Controllers
 
             var restaurantReadDTO = mapper.Map<RestaurantReadDTO>(restaurantModel);
 
+            // Send Sync
             try
             {
                 await userDataClient.SendRestaurantToUser(restaurantReadDTO);
             } catch( Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
+            // Send Async
+            try
+            {
+                var restaurantPublishedDTO = mapper.Map<RestaurantPublishedDTO>(restaurantReadDTO);
+                restaurantPublishedDTO.Event = "Rstaurant_Published";
+                messageBusClient.PublishNewRestaurant(restaurantPublishedDTO);
+            } catch ( Exception e )
             {
                 Console.WriteLine(e);
             }
