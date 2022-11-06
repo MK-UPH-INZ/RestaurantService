@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
+using RestaurantService.Extension;
 using RestaurantService.SyncDataServices.Http;
 
 namespace RestaurantService
@@ -32,6 +33,8 @@ namespace RestaurantService
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
+
+            services.AddCustomJwtAuthentication(Configuration["JwtKey"]);
 
             services.AddHttpClient<IUserDataClient, HttpUserDataClient>();
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
@@ -57,6 +60,7 @@ namespace RestaurantService
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

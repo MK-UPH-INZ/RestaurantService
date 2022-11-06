@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
@@ -8,6 +9,7 @@ using RestaurantService.SyncDataServices.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RestaurantService.Controllers
@@ -59,14 +61,27 @@ namespace RestaurantService.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateRestaurantById")]
+        [Authorize]
         public ActionResult<RestaurantReadDTO> UpdateRestaurantById(RestaurantUpdateDTO restaurantUpdateDTO, int id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return Unauthorized();
+
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier);
+            var userRole = identity.FindFirst(ClaimTypes.Role);
+
+            if (userId == null || userRole == null)
+                return Unauthorized();
+
             var restaurantItem = repository.GetRestaurantById(id);
 
             if (restaurantItem == null)
-            {
                 return NotFound();
-            }
+
+            if (userRole.Value != "ADMIN")
+                return Unauthorized();
 
             mapper.Map<RestaurantUpdateDTO, Restaurant>(restaurantUpdateDTO, restaurantItem);
             repository.SaveChanges();
@@ -75,6 +90,7 @@ namespace RestaurantService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<RestaurantReadDTO>> CreateRestaurant(RestaurantCreateDTO restaurantCreateDTO)
         {
             var restaurantModel = mapper.Map<Restaurant>(restaurantCreateDTO);
@@ -110,14 +126,29 @@ namespace RestaurantService.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteRestaurantById")]
+        [Authorize]
         public ActionResult DeleteRestaurant(int id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return Unauthorized();
+
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier);
+            var userRole = identity.FindFirst(ClaimTypes.Role);
+
+            if (userId == null || userRole == null)
+                return Unauthorized();
+
             var restaurantItem = repository.GetRestaurantById(id);
 
             if( restaurantItem == null )
             {
                 return NotFound();
             }
+
+            if (userRole.Value != "ADMIN")
+                return Unauthorized();
 
             repository.RemoveRestaurant(restaurantItem);
             repository.SaveChanges();
