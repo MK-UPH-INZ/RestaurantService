@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
     - name: Add Production JWT Key
       uses: benday-inc/set-property-value-in-appsettings@main
       with:
         pathtosettingsfile: '${{ github.workspace }}/appsettings.Production.json'
         keyname1: 'JwtKey'
         valuetoset: '${{ secrets.JWT_KEY }}'
-    - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
