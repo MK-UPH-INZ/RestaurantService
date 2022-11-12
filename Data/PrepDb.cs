@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using RestaurantService.Models;
+using RestaurantService.SyncDataServices.Grpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,57 @@ namespace RestaurantService.Data
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>());
+                var grpcClient = serviceScope.ServiceProvider.GetService<IUserDataClient>();
+                var users = grpcClient.ReturnAllUsers();
+                SeedUserData(
+                    serviceScope.ServiceProvider.GetService<IUserRepo>(),
+                    users
+                );
+                SeedRestaurantData(
+                    serviceScope.ServiceProvider.GetService<AppDbContext>() 
+                );
             }
         }
 
-        private static void SeedData(AppDbContext context)
+        private static void SeedUserData(
+            IUserRepo userRepo,
+            IEnumerable<User> users
+        )
+        {
+            Console.WriteLine("Seeding User Data");
+
+            if (users == null)
+            {
+                return;
+            }
+
+            foreach (var user in users)
+            {
+                if (!userRepo.ExternalUserExists(user.ExternalId))
+                {
+                    userRepo.CreateUser(user);
+                }
+            }
+
+            userRepo.SaveChanges();
+        }
+
+        private static void SeedRestaurantData(
+            AppDbContext context
+        )
         {
             if(!context.Restaurants.Any())
             {
                 Console.WriteLine("Seeding Restaurant Data");
 
+                var user = context.Users.FirstOrDefault(user => user.ExternalId == 1);
+
+                if (user == null)
+                    return;
+
                 context.Restaurants.AddRange(
-                    new Restaurant() { 
+                    new Restaurant() {
+                        OwnerId = 1,
                         Name = "Greenanic Smoothies",
                         Address = "ul. Jałowcowa 1034",
                         City = "Rybnik",
@@ -34,6 +74,7 @@ namespace RestaurantService.Data
                     },
                     new Restaurant()
                     {
+                        OwnerId = 1,
                         Name = "Bangalore Spices",
                         Address = "ul. Akwarelowa 33",
                         City = "Warszawa",
@@ -43,6 +84,7 @@ namespace RestaurantService.Data
                     },
                     new Restaurant()
                     {
+                        OwnerId = 1,
                         Name = "Veganic Corner",
                         Address = "ul. Pisarka Mariana 56",
                         City = "Warszawa",

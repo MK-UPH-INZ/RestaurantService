@@ -10,6 +10,9 @@ namespace RestaurantService.Models
         public int Id { get; set; }
 
         [Required]
+        public int OwnerId { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         [Required]
@@ -27,5 +30,7 @@ namespace RestaurantService.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime RegisterDate { get; set; }
+
+        public virtual User Owner { get; set; }
     }
 }

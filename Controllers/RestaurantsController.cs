@@ -5,7 +5,6 @@ using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
 using RestaurantService.DTO;
 using RestaurantService.Models;
-using RestaurantService.SyncDataServices.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +19,16 @@ namespace RestaurantService.Controllers
     {
         private readonly IRestaurantRepo repository;
         private readonly IMapper mapper;
-        private readonly IUserDataClient userDataClient;
         private readonly IMessageBusClient messageBusClient;
 
         public RestaurantsController(
             IRestaurantRepo repository,
             IMapper mapper,
-            IUserDataClient userDataClient,
             IMessageBusClient messageBusClient
         )
         {
             this.repository = repository;
             this.mapper = mapper;
-            this.userDataClient = userDataClient;
             this.messageBusClient = messageBusClient;
         }
 
@@ -98,15 +94,6 @@ namespace RestaurantService.Controllers
             repository.SaveChanges();
 
             var restaurantReadDTO = mapper.Map<RestaurantReadDTO>(restaurantModel);
-
-            // Send Sync
-            try
-            {
-                await userDataClient.SendRestaurantToUser(restaurantReadDTO);
-            } catch( Exception e)
-            {
-                Console.WriteLine(e);
-            }
             
             // Send Async
             try

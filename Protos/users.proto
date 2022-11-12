@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "IdentityService";
+
+service GrpcUser {
+	rpc GetAllUsers (GetAllRequest) returns (UserResponse);
+}
+
+message GetAllRequest {}
+
+message GrpcUserModel {
+	int32 userId = 1;
+	string userName = 2;
+	string userEmail = 3;
+}
+
+message UserResponse {
+	repeated GrpcUserModel user = 1;
+}

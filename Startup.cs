@@ -14,8 +14,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
+using RestaurantService.EventProcessing;
 using RestaurantService.Extension;
-using RestaurantService.SyncDataServices.Http;
+using RestaurantService.SyncDataServices.Grpc;
 
 namespace RestaurantService
 {
@@ -33,13 +34,16 @@ namespace RestaurantService
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
 
             services.AddCustomJwtAuthentication(Configuration["JwtKey"]);
 
-            services.AddHttpClient<IUserDataClient, HttpUserDataClient>();
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
+            services.AddSingleton<IEventProcessor, EventProcessor>();
+            services.AddScoped<IUserDataClient, UserDataClient>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddHostedService<MessageBusSubscriber>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestaurantService", Version = "v1" });

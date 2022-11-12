@@ -15,5 +15,6 @@ namespace RestaurantService.Data
         }
 
         public virtual DbSet<Restaurant> Restaurants { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

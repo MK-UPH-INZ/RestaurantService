@@ -1,4 +1,5 @@
-﻿using RestaurantService.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,12 @@ namespace RestaurantService.Data
 
         public IEnumerable<Restaurant> GetAllRestaurants()
         {
-            return context.Restaurants.ToList();
+            return context.Restaurants.Include("Owner").ToList();
         }
 
         public Restaurant GetRestaurantById(int id)
         {
-            return context.Restaurants.FirstOrDefault(r => r.Id == id);
+            return context.Restaurants.Include("Owner").FirstOrDefault(r => r.Id == id);
         }
 
         public bool SaveChanges()

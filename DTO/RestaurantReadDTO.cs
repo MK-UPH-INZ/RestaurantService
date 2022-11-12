@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantService.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace RestaurantService.DTO
     public class RestaurantReadDTO
     {
         public int Id { get; set; }
+
+        public RestaurantUserDTO Owner { get; set; }
 
         public string Name { get; set; }
 
