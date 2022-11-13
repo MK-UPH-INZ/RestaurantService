@@ -22,17 +22,37 @@ namespace RestaurantService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment env;
+
+        public Startup(
+            IConfiguration configuration, 
+            IWebHostEnvironment env
+        )
         {
             Configuration = configuration;
+            this.env = env;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
+            if (env.IsProduction())
+            {
+                Console.WriteLine("--> Using MSSQL DB");
+                services.AddDbContext<AppDbContext>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString("RestaurantServiceConn"))
+                );
+            }
+            else
+            {
+                Console.WriteLine("--> Using InMem DB");
+                services.AddDbContext<AppDbContext>(opt =>
+                    opt.UseInMemoryDatabase("InMem")
+                );
+            }
+
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
 
@@ -51,7 +71,7 @@ namespace RestaurantService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             if (env.IsDevelopment())
             {
@@ -72,7 +92,7 @@ namespace RestaurantService
                 endpoints.MapControllers();
             });
 
-            PrepDb.PrepPopulation(app);
+            PrepDb.PrepPopulation(app, env.IsProduction());
         }
     }
 }

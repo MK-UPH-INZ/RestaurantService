@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RestaurantService.Models;
 using RestaurantService.SyncDataServices.Grpc;
@@ -11,19 +12,38 @@ namespace RestaurantService.Data
 {
     public static class PrepDb
     {
-        public static void PrepPopulation(IApplicationBuilder app)
+        public static void PrepPopulation(IApplicationBuilder app, bool isProduction)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var grpcClient = serviceScope.ServiceProvider.GetService<IUserDataClient>();
                 var users = grpcClient.ReturnAllUsers();
+                var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+
+                if (isProduction)
+                    ApplyMigrations(context);
+
                 SeedUserData(
                     serviceScope.ServiceProvider.GetService<IUserRepo>(),
                     users
                 );
+
                 SeedRestaurantData(
-                    serviceScope.ServiceProvider.GetService<AppDbContext>() 
+                    context 
                 );
+            }
+        }
+
+        private static void ApplyMigrations(AppDbContext context)
+        {
+            Console.WriteLine("--> Applying Migrations...");
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"--> Could not run migrations: {ex.Message}");
             }
         }
 

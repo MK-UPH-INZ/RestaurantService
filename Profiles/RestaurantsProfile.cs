@@ -17,8 +17,10 @@ namespace RestaurantService.Profiles
             CreateMap<User, RestaurantUserDTO>();
             CreateMap<RestaurantCreateDTO, Restaurant>();
             CreateMap<RestaurantUpdateDTO, Restaurant>()
+                .ForMember(dest => dest.OwnerId, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RestaurantReadDTO, RestaurantPublishedDTO>();
+            CreateMap<Restaurant, RestaurantUpdatedDTO>();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace RestaurantService.Profiles
         {
             CreateMap<UserPublishedDTO, User>()
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<UserUpdatedDTO, User>()
+                .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
             CreateMap<GrpcUserModel, User>()
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))

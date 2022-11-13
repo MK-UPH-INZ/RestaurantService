@@ -9,5 +9,7 @@ namespace RestaurantService.AsyncDataServices
     public interface IMessageBusClient
     {
         void PublishNewRestaurant(RestaurantPublishedDTO restaurantPublishedDTO);
+        void UpdateRestaurant(RestaurantUpdatedDTO restaurantUpdatedDTO);
+        void DeleteRestaurant(RestaurantDeletedDTO restaurantDeletedDTO);
     }
 }

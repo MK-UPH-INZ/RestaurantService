@@ -54,6 +54,26 @@ namespace RestaurantService.AsyncDataServices
             }
         }
 
+        public void UpdateRestaurant(RestaurantUpdatedDTO restaurantUpdatedDTO)
+        {
+            var message = JsonSerializer.Serialize(restaurantUpdatedDTO);
+
+            if (connection.IsOpen)
+            {
+                SendMessage(message);
+            }
+        }
+
+        public void DeleteRestaurant(RestaurantDeletedDTO restaurantDeletedDTO)
+        {
+            var message = JsonSerializer.Serialize(restaurantDeletedDTO);
+
+            if (connection.IsOpen)
+            {
+                SendMessage(message);
+            }
+        }
+
         private void SendMessage(string message)
         {
             var body = Encoding.UTF8.GetBytes(message);

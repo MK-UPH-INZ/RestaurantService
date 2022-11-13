@@ -33,6 +33,11 @@ namespace RestaurantService.Data
             return context.Users.ToList();
         }
 
+        public User GetUserByExternalId(int externalId)
+        {
+            return context.Users.FirstOrDefault(user => user.ExternalId == externalId);
+        }
+
         public User GetUserById(int id)
         {
             return context.Users.FirstOrDefault(user => user.Id == id);

@@ -31,6 +31,9 @@ namespace RestaurantService.EventProcessing
                 case EventType.UserPublished:
                     addUser(message);
                     break;
+                case EventType.UserUpdated:
+                    updateUser(message);
+                    break;
                 default:
                     break;
             }
@@ -44,6 +47,10 @@ namespace RestaurantService.EventProcessing
             {
                 case "User_Published":
                     return EventType.UserPublished;
+                case "User_Updated":
+                    return EventType.UserUpdated;
+                case "User_Deleted":
+                    return EventType.UserDeleted;
                 default:
                     return EventType.Undetermined;
             }
@@ -65,7 +72,40 @@ namespace RestaurantService.EventProcessing
                     {
                         userRepository.CreateUser(user);
                         userRepository.SaveChanges();
-                        Console.WriteLine("Got new user");
+                        Console.WriteLine("--> Got new user");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+        private void updateUser(string userUpdatedMessage)
+        {
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepo>();
+
+                var userUpdatedDTO = JsonSerializer.Deserialize<UserUpdatedDTO>(userUpdatedMessage);
+
+                try
+                {
+                    var existingUser = userRepository.GetUserByExternalId(userUpdatedDTO.Id);
+
+                    if (existingUser == null)
+                    {
+                        var newUser = mapper.Map<User>(userUpdatedDTO);
+                        userRepository.CreateUser(newUser);
+                        userRepository.SaveChanges();
+                        Console.WriteLine("--> Got new user");
+                    }
+                    else
+                    {
+                        mapper.Map<UserUpdatedDTO, User>(userUpdatedDTO, existingUser);
+                        userRepository.SaveChanges();
+                        Console.WriteLine("--> Updated user");
                     }
                 }
                 catch (Exception e)
@@ -79,6 +119,8 @@ namespace RestaurantService.EventProcessing
     enum EventType
     {
         UserPublished,
+        UserUpdated,
+        UserDeleted,
         Undetermined
     }
 }
