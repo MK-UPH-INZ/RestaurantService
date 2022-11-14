@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RestaurantService.Data;
 using RestaurantService.DTO;
+using RestaurantService.DTO.User.Events;
 using RestaurantService.Models;
 using System;
 using System.Text.Json;

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RestaurantService.DTO
+namespace RestaurantService.DTO.Restaurant
 {
     public class RestaurantReadDTO
     {

@@ -16,7 +16,7 @@ namespace RestaurantService.Data
         }
         public void CreateRestaurant(Restaurant restaurant)
         {
-            if(restaurant == null)
+            if (restaurant == null)
             {
                 throw new ArgumentNullException(nameof(restaurant));
             }
@@ -41,7 +41,7 @@ namespace RestaurantService.Data
 
         public bool SaveChanges()
         {
-            return (context.SaveChanges() >= 0);
+            return context.SaveChanges() >= 0;
         }
     }
 }

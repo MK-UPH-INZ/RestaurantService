@@ -55,6 +55,7 @@ namespace RestaurantService
 
             services.AddScoped<IRestaurantRepo, RestaurantRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IProductRepo, ProductRepo>();
 
             services.AddCustomJwtAuthentication(Configuration["JwtKey"]);
 

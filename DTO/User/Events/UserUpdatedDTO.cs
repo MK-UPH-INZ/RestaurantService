@@ -1,6 +1,6 @@
-﻿namespace RestaurantService.DTO
+﻿namespace RestaurantService.DTO.User.Events
 {
-    public class UserPublishedDTO
+    public class UserUpdatedDTO
     {
         public int Id { get; set; }
         public string UserName { get; set; }

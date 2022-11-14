@@ -1,4 +1,4 @@
-﻿namespace RestaurantService.DTO
+﻿namespace RestaurantService.DTO.Restaurant
 {
     public class RestaurantUserDTO
     {

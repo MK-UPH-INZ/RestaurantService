@@ -1,4 +1,5 @@
-﻿using RestaurantService.DTO;
+﻿using RestaurantService.DTO.Product.Events;
+using RestaurantService.DTO.Restaurant.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,8 @@ namespace RestaurantService.AsyncDataServices
         void PublishNewRestaurant(RestaurantPublishedDTO restaurantPublishedDTO);
         void UpdateRestaurant(RestaurantUpdatedDTO restaurantUpdatedDTO);
         void DeleteRestaurant(RestaurantDeletedDTO restaurantDeletedDTO);
+        void PublishNewProduct(ProductPublishedDTO productPublishedDTO);
+        void UpdateProduct(ProductUpdatedDTO productUpdatedDTO);
+        void DeleteProduct(ProductDeletedDTO productDeletedDTO);
     }
 }

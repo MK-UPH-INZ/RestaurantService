@@ -28,9 +28,8 @@ namespace RestaurantService.Data
                     users
                 );
 
-                SeedRestaurantData(
-                    context 
-                );
+                SeedRestaurantData(context);
+                seedProductData(context);
             }
         }
 
@@ -52,7 +51,7 @@ namespace RestaurantService.Data
             IEnumerable<User> users
         )
         {
-            Console.WriteLine("Seeding User Data");
+            Console.WriteLine("--> Seeding User Data");
 
             if (users == null)
             {
@@ -74,9 +73,9 @@ namespace RestaurantService.Data
             AppDbContext context
         )
         {
-            if(!context.Restaurants.Any())
+            if (!context.Restaurants.Any())
             {
-                Console.WriteLine("Seeding Restaurant Data");
+                Console.WriteLine("--> Seeding Restaurant Data");
 
                 var user = context.Users.FirstOrDefault(user => user.ExternalId == 1);
 
@@ -84,7 +83,8 @@ namespace RestaurantService.Data
                     return;
 
                 context.Restaurants.AddRange(
-                    new Restaurant() {
+                    new Restaurant()
+                    {
                         OwnerId = 1,
                         Name = "Greenanic Smoothies",
                         Address = "ul. Jałowcowa 1034",
@@ -117,7 +117,38 @@ namespace RestaurantService.Data
             }
             else
             {
-                Console.WriteLine("Restaurant Data is present");
+                Console.WriteLine("--> Restaurant Data is present");
+            }
+        }
+
+        private static void seedProductData(
+            AppDbContext context
+        )
+        {
+            Console.WriteLine("--> Seeding Product Data");
+
+            if (!context.Products.Any())
+            {
+                context.Products.AddRange(
+                    new Product()
+                    {
+                        Name = "Pizza peperoni",
+                        Price = 2550,
+                        RestaurantId = 1
+                    },
+                    new Product()
+                    {
+                        Name = "Pizza margherita",
+                        Price = 1900,
+                        RestaurantId = 1
+                    }
+                );
+
+                context.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("--> Product Data is present");
             }
         }
     }

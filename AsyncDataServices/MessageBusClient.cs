@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using RestaurantService.DTO;
+using RestaurantService.DTO.Product.Events;
+using RestaurantService.DTO.Restaurant.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,36 @@ namespace RestaurantService.AsyncDataServices
         public void DeleteRestaurant(RestaurantDeletedDTO restaurantDeletedDTO)
         {
             var message = JsonSerializer.Serialize(restaurantDeletedDTO);
+
+            if (connection.IsOpen)
+            {
+                SendMessage(message);
+            }
+        }
+
+        public void PublishNewProduct(ProductPublishedDTO productPublishedDTO)
+        {
+            var message = JsonSerializer.Serialize(productPublishedDTO);
+
+            if (connection.IsOpen)
+            {
+                SendMessage(message);
+            }
+        }
+
+        public void UpdateProduct(ProductUpdatedDTO productUpdatedDTO)
+        {
+            var message = JsonSerializer.Serialize(productUpdatedDTO);
+
+            if (connection.IsOpen)
+            {
+                SendMessage(message);
+            }
+        }
+
+        public void DeleteProduct(ProductDeletedDTO productDeletedDTO)
+        {
+            var message = JsonSerializer.Serialize(productDeletedDTO);
 
             if (connection.IsOpen)
             {

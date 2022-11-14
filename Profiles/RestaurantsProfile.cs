@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using RestaurantService.DTO;
+using RestaurantService.DTO.Restaurant;
+using RestaurantService.DTO.Restaurant.Events;
 using RestaurantService.Models;
 
 namespace RestaurantService.Profiles

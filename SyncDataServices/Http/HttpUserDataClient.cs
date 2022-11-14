@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using RestaurantService.DTO;
+using RestaurantService.DTO.Restaurant;
 using System;
 using System.Collections.Generic;
 using System.Linq;

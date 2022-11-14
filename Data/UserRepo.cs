@@ -50,7 +50,7 @@ namespace RestaurantService.Data
 
         public bool SaveChanges()
         {
-            return (context.SaveChanges() >= 0);
+            return context.SaveChanges() >= 0;
         }
     }
 }

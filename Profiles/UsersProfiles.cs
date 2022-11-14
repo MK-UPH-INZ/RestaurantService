@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using IdentityService;
-using RestaurantService.DTO;
+using RestaurantService.DTO.User.Events;
 using RestaurantService.Models;
 
 namespace RestaurantService.Profiles
