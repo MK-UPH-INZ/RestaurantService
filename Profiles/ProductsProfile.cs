@@ -17,6 +17,8 @@ namespace RestaurantService.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Product, ProductPublishedDTO>();
             CreateMap<Product, ProductUpdatedDTO>();
+            CreateMap<Product, GrpcProductModel>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

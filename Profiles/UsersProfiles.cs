@@ -17,6 +17,7 @@ namespace RestaurantService.Profiles
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.UserEmail))
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.UserRestaurants, opt => opt.Ignore());
         }
     }

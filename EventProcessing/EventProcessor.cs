@@ -35,6 +35,9 @@ namespace RestaurantService.EventProcessing
                 case EventType.UserUpdated:
                     updateUser(message);
                     break;
+                case EventType.UserDeleted:
+                    deleteUser(message);
+                    break;
                 default:
                     break;
             }
@@ -113,6 +116,24 @@ namespace RestaurantService.EventProcessing
                 {
                     Console.WriteLine(e.Message);
                 }
+            }
+        }
+
+        private void deleteUser(string userDeletedMessage)
+        {
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepo>();
+
+                var userDeletedDTO = JsonSerializer.Deserialize<UserDeletedDTO>(userDeletedMessage);
+
+                var user = userRepository.GetUserByExternalId(userDeletedDTO.Id);
+
+                if (user == null)
+                    return;
+
+                userRepository.RemoveUser(user);
+                userRepository.SaveChanges();
             }
         }
     }

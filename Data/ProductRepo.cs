@@ -34,6 +34,14 @@ namespace RestaurantService.Data
             return context.Products.Include("Restaurant.Owner").FirstOrDefault(p => p.Id == id);
         }
 
+        public IEnumerable<Product> GetProductsByIdList(IEnumerable<int> restaurantIds)
+        {
+            return context.Products
+                .Include("Restaurant.Owner")
+                .Where(p => restaurantIds.Contains(p.Id))
+                .ToList();
+        }
+
         public IEnumerable<Product> GetProductsByRestaurant(int restaurantId)
         {
             return context.Products

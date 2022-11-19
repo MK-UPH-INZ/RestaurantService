@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "RestaurantService";
+
+service GrpcRestaurant {
+	rpc GetAllRestaurants (GetAllRestaurantsRequest) returns (RestaurantResponse);
+}
+
+message GetAllRestaurantsRequest {}
+
+message GrpcRestaurantModel {
+	int32 restaurantId = 1;
+	int32 ownerId = 2;
+	string Name = 3;
+}
+
+message RestaurantResponse {
+	repeated GrpcRestaurantModel restaurant = 1;
+}

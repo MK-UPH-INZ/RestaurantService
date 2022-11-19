@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +64,7 @@ namespace RestaurantService
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
             services.AddSingleton<IEventProcessor, EventProcessor>();
             services.AddScoped<IUserDataClient, UserDataClient>();
+            services.AddGrpc();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHostedService<MessageBusSubscriber>();
@@ -91,6 +94,18 @@ namespace RestaurantService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<GrpcRestaurantService>();
+                endpoints.MapGrpcService<GrpcProductService>();
+
+                endpoints.MapGet("/protos/restaurants.proto", async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("Protos/restaurants.proto"));
+                });
+
+                endpoints.MapGet("/protos/products.proto", async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("Protos/products.proto"));
+                });
             });
 
             PrepDb.PrepPopulation(app, env.IsProduction());

@@ -121,7 +121,6 @@ namespace RestaurantService.Controllers
             try
             {
                 var restaurantPublishedDTO = mapper.Map<RestaurantPublishedDTO>(restaurantReadDTO);
-                restaurantPublishedDTO.Event = "Rstaurant_Published";
                 messageBusClient.PublishNewRestaurant(restaurantPublishedDTO);
             } catch ( Exception e )
             {

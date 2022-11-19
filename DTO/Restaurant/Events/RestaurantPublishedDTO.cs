@@ -9,6 +9,8 @@ namespace RestaurantService.DTO.Restaurant.Events
     {
         public int Id { get; set; }
 
+        public int OwnerId { get; set; }
+
         public string Name { get; set; }
 
         public string Event { get; set; } = "Restaurant_Published";

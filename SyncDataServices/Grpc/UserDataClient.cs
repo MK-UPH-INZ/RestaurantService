@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Grpc.Net.Client;
-using IdentityService;
 using Microsoft.Extensions.Configuration;
 using RestaurantService.Models;
 using System;
@@ -25,8 +24,8 @@ namespace RestaurantService.SyncDataServices.Grpc
             Console.WriteLine($"--> Calling GRPC Service {configuration["GrpcUser"]}");
 
             var channel = GrpcChannel.ForAddress(configuration["GrpcUser"]);
-            var client = new GrpcUser.GrpcUserClient(channel);
-            var request = new GetAllRequest();
+            var client = new IdentityService.GrpcUser.GrpcUserClient(channel);
+            var request = new IdentityService.GetAllRequest();
 
             try
             {
