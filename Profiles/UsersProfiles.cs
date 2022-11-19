@@ -10,6 +10,7 @@ namespace RestaurantService.Profiles
         public UsersProfiles()
         {
             CreateMap<UserPublishedDTO, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
             CreateMap<UserUpdatedDTO, User>()
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
