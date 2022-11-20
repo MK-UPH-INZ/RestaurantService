@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantService.AsyncDataServices;
 using RestaurantService.Data;
@@ -12,6 +13,7 @@ using System.Security.Claims;
 
 namespace RestaurantService.Controllers
 {
+    [EnableCors("Api")]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
